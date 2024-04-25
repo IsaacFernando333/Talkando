@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talkando</title>
+    <link rel="stylesheet" href="../css/stylePageSubmit.css">
+</head>
+<body>
+    <a id="home" href="./HOME.html"><ion-icon name="home-outline"></a>
+    <div class="caixa-postagem">
+        <label for="titulo">Insira a sua mensagem:</label>
+        <textarea name="" placeholder="Seja criativo e interaja com os seus amigos" class="publiInfo" id="titulo" cols="30" rows="5"></textarea>
+        <label for="embed">Adicione o seu embed:</label>
+        <textarea name="" placeholder="Adicione uma legenda ou um embed de outro site" class="publiInfo" id="embed" cols="30" rows="2"></textarea>
+        <label id="file" for="aFoto"><ion-icon name="cloud-upload-outline"></ion-icon>Imagem</label>
+        <input type="file" id="aFoto" accept="image/png, image/jpeg" />
+        <img src="" id="preview" alt="">
+        <label for="humor">Selecione seu humor:</label>
+        <select id="humor" name="humor">
+            <option value="normal">Normal</option>
+            <option value="feliz">Feliz</option>
+            <option value="triste">Triste</option>
+            <option value="depressivo">Depressivo</option>
+            <option value="animado">Animado</option>
+            <option value="curioso">Curioso</option>
+            <option value="irritado">Irritado</option>
+            <option value="empolgado">Empolgado</option>
+            <option value="ansioso">Ansioso</option>
+            <option value="calmo">Calmo</option>
+            <option value="grato">Grato</option>
+            <option value="surpreso">Surpreso</option>
+            <option value="nostalgico">Nostálgico</option>
+            <option value="confuso">Confuso</option>
+            <option value="motivado">Motivado</option>
+            <option value="desanimado">Desanimado</option>
+            <option value="esperancoso">Esperançoso</option>
+            <option value="indiferente">Indiferente</option>
+            <option value="otimista">Otimista</option>
+            <option value="cetico">Cético</option>
+            <option value="agradecido">Agradecido</option>
+            <option value="euforico">Eufórico</option>
+            <option value="melancolico">Melancólico</option>
+            <option value="encantado">Encantado</option>
+            <option value="desapontado">Desapontado</option>
+        </select>
+    </div>
+    <button id="submit">Enviar</button>
+    <script src="../js/enviar.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

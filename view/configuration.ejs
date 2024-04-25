@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styleLogCad.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="nav">
+        <a class="explorar" href="http://localhost:4000/html/mandar.html"><ion-icon name="duplicate-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/html/HOME.html"><ion-icon name="home-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/html/GLOBAL.html"><ion-icon name="planet-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/search"><ion-icon name="search-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/html/index.html"><ion-icon name="log-out-outline"></ion-icon></a>
+    </div>
+    <section class="cad">
+        <p class="msg">Altere as suas informações</p>
+        <fieldset id="main">
+            <p>
+                <input type="text" id="nome" name="nome" placeholder="Novo nome">
+                <!-- <input type="email" id="email" placeholder="Seu e-mail">  -->
+                <input type="password" id="senha" placeholder="Nova senha">  
+                <input type="text" id="local" placeholder="Sua cidade">
+                <label for="date">Data de nascimento</label>
+                <input type="date" id="date" placeholder="nascimento">
+                <label for="sexos">Gênero</label>
+                <select name="sexos" id="sexos">
+                    <option class="valor" value="homem">Homem</option>
+                    <option class="valor" value="mulher">Mulher</option>
+                    <option class="valor" value="outro">Outro</option>
+                </select>
+            </p>
+
+            <label for="aFoto">Sua foto de perfil</label>
+            <input type="file" id="aFoto">
+            <label for="aFotoCapa">Sua foto de Capa</label>
+            <input type="file" id="aFotoCapa">
+
+            <textarea id="textoApresenta" placeholder="Sua apresentação"></textarea>
+
+            <button id="submit" type="submit">Salvar</button>
+        </fieldset>
+    </section>
+    <script>
+window.onload = function () {sessionStorage.removeItem("img");sessionStorage.removeItem("imgCapa");};
+
+const foto = document.getElementById('aFoto');
+const fotoCapa = document.getElementById('aFotoCapa');
+
+foto.addEventListener("change", (e) => {
+    let size = foto.files[0].size;
+    if(size > (1048576 * 5)) {
+        alert('Apenas arquivos abaixo de 5 megabytes');
+        foto.value = "";
+        sessionStorage.removeItem("img");
+    }
+    e.preventDefault();
+    const fr = new FileReader();
+    if (foto.value !== '') {
+        fr.readAsDataURL(foto.files[0]);
+    };
+    fr.addEventListener('load', () => {
+        const url = fr.result;
+        sessionStorage.setItem('img', url);
+    });
+})
+
+fotoCapa.addEventListener("change", (e) => {
+    let size = fotoCapa.files[0].size;
+    if(size > (1048576 * 5)) {
+        alert('Apenas arquivos abaixo de 5 megabytes');
+        fotoCapa.value = "";
+        sessionStorage.removeItem("imgCapa");
+    }
+    e.preventDefault();
+    const fr = new FileReader();
+    if (fotoCapa.value !== '') {
+        fr.readAsDataURL(fotoCapa.files[0]);
+    };
+    fr.addEventListener('load', () => {
+        const url = fr.result;
+        sessionStorage.setItem('imgCapa', url);
+    });
+})
+
+
+const button = document.getElementById('submit');
+button.addEventListener('click', async event => { 
+
+    const name = document.getElementById('nome').value;
+    const password = document.getElementById('senha').value;
+    const sexo = document.getElementById('sexos').value;
+    const local = document.getElementById('local').value;
+    const apresentacao = document.getElementById('textoApresenta').value;
+    const nascBruto = document.getElementById('date').value;
+    const nascimento = `${nascBruto.slice(8, 10)}/${nascBruto.slice(5, 7)}/${nascBruto.slice(0, 4)}`;
+    const avatar = sessionStorage.getItem('img');
+    const capa = sessionStorage.getItem('imgCapa');
+
+    if (!(name || password || apresentacao || nascimento || sexo || local || avatar || capa)) {
+        alert('Nehuma alteração foi feita');
+        return;
+    }
+
+    const data = { name, password, apresentacao, nascimento, sexo, local, avatar, capa };
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${sessionStorage.getItem('token')}`
+        },
+        body: JSON.stringify(data)    
+    };
+
+    const req = await fetch('/configs', options);
+    const res = await req.json();
+    window.location.href = ".html/HOME.html";
+});
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/search.css">
+    <title>Talkando</title>
+</head>
+<body>
+    <div class="nav">
+        <a class="explorar" href="http://localhost:4000/mandar.html"><ion-icon name="duplicate-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/HOME.html"><ion-icon name="home-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/GLOBAL.html"><ion-icon name="planet-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/index.html"><ion-icon name="log-out-outline"></ion-icon></a>
+    </div>
+    <div class="search">
+        <input class="name" placeholder="Procure pelo nome" type="text">
+    </div>
+    <section class="response">
+    </section>
+    <script>
+        async function getUsers(name) {
+            const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':'application/json'
+                    },
+                    body: JSON.stringify({name})
+                }
+            const req = await fetch('/search/profiles', options);
+            const res = await req.json();
+            return res;
+        }
+
+        const get = document.querySelector('.name');
+        const response = document.querySelector('.response');
+        get.addEventListener('keydown', async(e) => {
+            let value = document.querySelector('.name');
+            if (e.key === 'Enter' && value.value !== '') {
+
+                const name = value.value;
+                value.value = '';
+                const get = await getUsers(name);
+                response.innerHTML = '';
+                for (el of get.lista) {
+                    response.innerHTML += 
+                    `<div class="user">
+                    <img src="${el.pic}" class="pic" id="${el.id}" alt="Avatar">
+                        <div class="text">
+                            <a href="/profile/${el.id}" class="identification">${el.name}</a>
+                            <h3 class="apresentacao">${el.apresentacao}</h3>
+                        </div>
+                    </div>`
+                }
+                return;
+            } else {
+                return;
+            }
+        })
+        document.addEventListener('click', (e) => {
+            const pics = document.querySelectorAll('.pic');
+            for (p of pics) {
+                if (e.target === p){
+                    location.href = '/profile/'+p.getAttribute('id');
+                }
+            }
+        })
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

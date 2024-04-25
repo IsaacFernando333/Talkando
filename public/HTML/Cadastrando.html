@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styleLogCad.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Talkando</title>
+</head>
+<body>
+    <section class="cad">
+        <p class="msg">Cadastre-se agora</p>
+        <fieldset id="main">
+            <p>
+                <input type="text" id="nome" name="nome" placeholder="Digite o seu nome">
+                <input type="email" id="email" placeholder="Seu e-mail"> 
+                <input type="password" id="senha" placeholder="Sua senha">  
+                <input type="text" id="local" placeholder="Sua cidade">
+                <label for="date">Data de nascimento</label>
+                <input type="date" id="date" placeholder="nascimento">
+                <label for="sexos">Gênero</label>
+                <select name="sexos" id="sexos">
+                    <option class="valor" value="homem">Homem</option>
+                    <option class="valor" value="mulher">Mulher</option>
+                    <option class="valor" value="outro">Outro</option>
+                </select>
+            </p>
+
+            <label for="aFoto">Sua foto de perfil</label>
+            <input type="file" id="aFoto">
+            <label for="aFotoCapa">Sua foto de Capa</label>
+            <input type="file" id="aFotoCapa">
+
+            <textarea id="textoApresenta" placeholder="Sua apresentação"></textarea>
+
+            <button id="submit" type="submit">Cadastrar</button>
+            <a href="./index.html">Já tenho uma conta</a>
+        </fieldset>
+    </section>
+    <script src="../js/cadastrando.js"></script>
+</body>
+</html>

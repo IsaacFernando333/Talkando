@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/stylePublis.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="nav">
+        <a class="explorar" href="http://localhost:4000/html/mandar.html"><ion-icon name="duplicate-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/html/HOME.html"><ion-icon name="home-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/html/GLOBAL.html"><ion-icon name="planet-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/search"><ion-icon name="search-outline"></ion-icon></a>
+        <a class="explorar" href="http://localhost:4000/html/index.html"><ion-icon name="log-out-outline"></ion-icon></a>
+    </div>
+    <main class="corpo">
+        <section class="caixa-corpo">
+            <div class="todos">
+                <div class="apresentacao" style="background-image: url(<%-user.capa%>)">
+                    <div class="nomeefoto">
+                    </div>
+                </div>
+                <div class="nomeefoto">
+                    <div class="foto" style="background-image: url(<%-user.avatar%>)"></div>
+                    <h1 class="nome"><%-user.name%></h1>
+                    <h3 class="info"><%-user.apresentacao%></h3>
+                    <div class="outros">
+                        <h5 class="nascimento"><%-user.nascimento%></h3>
+                        <h5 class="sexo"><%-user.sexo%></h3>
+                    </div>
+                    <button class="adicionar">...</button>
+                </div>
+            </div>
+            <div class="caixa-publi">
+                <% for( let index = 0; index < publis.length; index++ ) { %>
+                    <div class="publi <%- publis[index]._id %>">
+                        <div class="informações-cima ic-home">
+                            <div class="orCima">
+                                <!-- <img src="<%- publis[index].avatar %>"> -->
+                                <img src="<%- user.avatar %>">
+                            <div class="info-pequenas">
+                                <!-- <a id="nome"><%- publis[index].name %></a> -->
+                                <a id="nome"><%- user.name %></a>
+                                <p id="date"><%- publis[index].date %></p>
+                                <a id="local"><%- publis[index].local %></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="informações-meio">
+                    </div>
+                    <div class="titulo-publi">
+                        <h3 id="titulo"><%- publis[index].titulo %></h3>
+                        <h3 class="humor" ><%- publis[index].humor %></h3>
+                    </div>
+                    <div class="imagem-principal">
+                        <% if(publis[index].pic){ %>
+                            <img class="pic" src="<%- publis[index].pic %>">
+                          <% } else{ %>  
+                            <img class="pic" src="<%- publis[index].pic %>" style="display: none;">
+                         <% } %>
+                        <div class="embed"><%- publis[index].embed %></div>
+                    </div>
+                    <div class="cxintera">
+                        <div class="cxbt"><ion-icon class="like gostei" name="thumbs-up-outline"></ion-icon><a class="nLikes"><%- publis[index].like %></a><ion-icon class="comment" name="chatbubble-ellipses-outline"></ion-icon><a class="nLikes"><%- publis[index].qtd_cm %></a></div><span class="escreveComentario">
+                            <textarea name="" placeholder="Seu comentário" id="textComentario" cols="30" rows="3"></textarea>
+                            <button id="enviarComentario" class="buttCom">></button>
+                        </span>
+                    </div>
+                    <div class="comeT">
+                        <% for( let i = 0; i < publis[index].comentarios.length; i++ ) { %>
+                        <div class='osComentarios'>
+                            <a class="nomeComentador" href="/profile/<%- publis[index].comentarios[i].idPessoa %>"><%- publis[index].comentarios[i].name %></a> ~ <%- publis[index].comentarios[i].comentario %>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <% } %>
+        </section>
+    </main>
+    <script>
+        let id = <%-JSON.stringify(user._id)%>;
+        document.addEventListener('click', async(e) => {
+            const adicionar = document.querySelector('.adicionar');
+            if (e.target === adicionar) {
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({id})
+                }
+                const req = await fetch('/follow/request', options);
+                const res = await req;
+            } else {
+                return;
+            }
+        });
+        const adicionar = document.querySelector('.adicionar');
+        adicionar.addEventListener('click', () => {
+            if (adicionar.innerHTML === 'Seguir') {
+                adicionar.innerHTML =  'Seguindo';
+            } else {
+                adicionar.innerHTML = 'Seguir';
+            }
+        });
+
+        async function follower() {
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'authorization' : `Bearer ${sessionStorage.getItem('token')}`
+                },
+                body: JSON.stringify({id})
+            }
+            const req = await fetch('/following', options);
+            const res = await req.json();
+            const adicionar = document.querySelector('.adicionar');
+            adicionar.innerHTML = res.obj.msg;
+        }
+        follower();
+    </script>
+    <script src='/js/HOME2.js' type='text/javascript'></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
