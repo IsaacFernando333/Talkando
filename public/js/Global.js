@@ -1,3 +1,4 @@
+getUserInfo();
 async function getUserInfo() {
     const token = sessionStorage.getItem('token');
     const options = {
@@ -17,6 +18,7 @@ async function getUserInfo() {
           return '<a class="link" target="_blank" href="' + url + '">' + url + '</a>'
         })
     }
+
     function retornaEmbeds(text) {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         var matches_array = text.match(urlRegex);
@@ -31,25 +33,10 @@ async function getUserInfo() {
         }
     }
 
+    let infos = [];
+    //Id publicação e id pessoa
 
     for (item of res) {
-
-        async function getAVNA(a) {
-            const idP = a;
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type':'application/json',
-                },
-                body: JSON.stringify({idP})
-            }
-            
-            const req = await fetch('/info/profiles', options);
-            const res = req.json();
-            return res;
-        }
-        
-        const dataUser = await getAVNA(item.idPessoa);
         
         const ifo4 = document.querySelector('.caixa-publi');
         const ifo5 = document.createElement('div');
@@ -87,11 +74,8 @@ async function getUserInfo() {
     
     
         titulo.innerHTML = urlify(item.titulo).replace(/(\r\n|\n|\r)/gm, "<br>"); 
-        nome.textContent = dataUser.name;
-        nome.href = `/profile/${dataUser.id}`;
         local.textContent = item.local;
         date.textContent = item.date;
-        pct.src = `${dataUser.pic}`;
         mood.textContent = item.humor;
         if (item.pic !== null) {
             img.src = `${item.pic}`;
@@ -125,7 +109,40 @@ async function getUserInfo() {
         ifo5.appendChild(ip);
         ifo5.appendChild(likcom);
         ifo5.appendChild(come);
+        ifo4.appendChild(ifo5);
+        infp.appendChild(nome);
+        infp.appendChild(date);
+        infp.appendChild(local);
+        infos.push([item._id, item.idPessoa]);
+    }
 
+    let contador = 0;
+    for (e of infos) {
+        async function getAVNA(a) {
+            const idP = a;
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json',
+                },
+                body: JSON.stringify({idP})
+            }
+            
+            const req = await fetch('/info/profiles', options);
+            const res = req.json();
+            return res;
+        }
+        
+        const dataUser = await getAVNA(e[1]);
+        const publis = document.querySelectorAll('.publi');
+        publis[contador].childNodes[0].childNodes[1].childNodes[0].textContent = dataUser.name;
+        publis[contador].childNodes[0].childNodes[1].childNodes[0].href = `/profile/${dataUser.id}`;
+        publis[contador].childNodes[0].childNodes[0].src = `${dataUser.pic}`;
+        contador += 1;
+    }
+
+    let index = 0;
+    for (j of infos) {
         const token = sessionStorage.getItem('token');
         const options = {
             method: 'POST',
@@ -133,12 +150,14 @@ async function getUserInfo() {
                 'Content-Type':'application/json',
                 'authorization':`Bearer ${token}`
             },
-            body: JSON.stringify({idP: item._id})
+            body: JSON.stringify({idP: j[0]})
         }
         
         const req = await fetch('/get/comment', options);
         const res = await req.json();
 
+        const publis = document.querySelectorAll('.publi');
+        let come = publis[index].childNodes[5];
 
         for (o of res.comentarios) {
             let div = document.createElement('div');
@@ -146,12 +165,6 @@ async function getUserInfo() {
             div.innerHTML = `<a class="nomeComentador" href="/Profile/${o.idPessoa}">${o.name}</a> ~ ${o.comentario}`;
             come.appendChild(div);
         }
-
-        ifo4.appendChild(ifo5);
-        infp.appendChild(nome);
-        infp.appendChild(date);
-        infp.appendChild(local);
+        index += 1;
     }
 }
-
-getUserInfo();

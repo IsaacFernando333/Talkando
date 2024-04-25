@@ -1,3 +1,55 @@
+getUserInfo();
+getFollow();
+
+async function getUserInfo() {
+    const token = sessionStorage.getItem('token');
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type':'application/json',
+            'authorization':`Bearer ${token}`
+        }
+    }
+    
+    const req = await fetch('/user/info', options);
+    const res = await req.json();
+
+    const foto = document.querySelector('.foto');
+    const fotoCapa = document.querySelector('.apresentacao');
+    const name = document.querySelector('.nome');
+    const apre = document.querySelector('.info');
+    const genero = document.querySelector('.sexo');
+    const nasc = document.querySelector('.nascimento');
+    
+    foto.style.backgroundImage = `url(${res.user.avatar})`;
+    fotoCapa.style.backgroundImage = `url(${res.user.capa})`;
+    name.textContent = res.user.name;
+    apre.textContent = res.user.apresentacao;
+    genero.textContent = res.user.sexo;
+    nasc.textContent = res.user.nascimento;
+
+    getData(res.user.local, res.user.name, res.user.avatar, token);
+}
+
+async function getFollow() {
+    const token = sessionStorage.getItem('token');
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type':'application/json',
+            'authorization':`Bearer ${token}`
+        }
+    }
+    
+    const req = await fetch('/following/list', options);
+    const res = await req.json();
+
+    const amigos = document.querySelector('.friends');
+    for (el of res.data) {
+        amigos.innerHTML += `<div class="amigo"><img class="picFriends" src="${el.avatar}"><a href="/profile/${el.idfollow}">${el.name}</a></div>`;
+    }
+}
+
 async function getData(a, b, c, t) {
     
     const options = {
@@ -33,6 +85,18 @@ async function getData(a, b, c, t) {
     }
     
     for (item of res) {
+        const token = t;
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json',
+                'authorization':`Bearer ${token}`
+            },
+            body: JSON.stringify({idP: item._id})
+        }
+        
+        const req = await fetch('/get/comment', options);
+        const res = await req.json();
 
         //Criando elementos
 
@@ -126,22 +190,6 @@ async function getData(a, b, c, t) {
         ifo5.appendChild(likcom);
         ifo5.appendChild(come);
 
-
-
-        const token = sessionStorage.getItem('token');
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type':'application/json',
-                'authorization':`Bearer ${token}`
-            },
-            body: JSON.stringify({idP: item._id})
-        }
-        
-        const req = await fetch('/get/comment', options);
-        const res = await req.json();
-
-
         for (o of res.comentarios) {
             let div = document.createElement('div');
             div.setAttribute('class', 'osComentarios');
@@ -155,57 +203,3 @@ async function getData(a, b, c, t) {
         infp.appendChild(local);
     }
 }
-
-
-async function getUserInfo() {
-    const token = sessionStorage.getItem('token');
-    const options = {
-        method: 'GET',
-        headers: {
-            'Content-Type':'application/json',
-            'authorization':`Bearer ${token}`
-        }
-    }
-    
-    const req = await fetch('/user/info', options);
-    const res = await req.json();
-
-    const foto = document.querySelector('.foto');
-    const fotoCapa = document.querySelector('.apresentacao');
-    const name = document.querySelector('.nome');
-    const apre = document.querySelector('.info');
-    const genero = document.querySelector('.sexo');
-    const nasc = document.querySelector('.nascimento');
-    
-    foto.style.backgroundImage = `url(${res.user.avatar})`;
-    fotoCapa.style.backgroundImage = `url(${res.user.capa})`;
-    name.textContent = res.user.name;
-    apre.textContent = res.user.apresentacao;
-    genero.textContent = res.user.sexo;
-    nasc.textContent = res.user.nascimento;
-
-    getData(res.user.local, res.user.name, res.user.avatar, token);
-}
-
-getUserInfo();
-
-async function getFollow() {
-    const token = sessionStorage.getItem('token');
-    const options = {
-        method: 'GET',
-        headers: {
-            'Content-Type':'application/json',
-            'authorization':`Bearer ${token}`
-        }
-    }
-    
-    const req = await fetch('/following/list', options);
-    const res = await req.json();
-
-    const amigos = document.querySelector('.friends');
-    for (el of res.data) {
-        amigos.innerHTML += `<div class="amigo"><img class="picFriends" src="${el.avatar}"><a href="/profile/${el.idfollow}">${el.name}</a></div>`;
-    }
-}
-
-getFollow();

@@ -63,7 +63,6 @@ app.get('/user/publis', checkToken, async(req, res) => {
 app.post('/info/profiles', async(req, res) => {
   const id = req.body.idP;
   const users = await User.findById(id);
-
   res.json({name: users.name, pic: users.avatar, id: users._id});
 })
 
