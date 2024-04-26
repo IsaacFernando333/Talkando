@@ -231,3 +231,48 @@ fieldset {
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+
+@media (width < 1100px) {
+    .nav {
+        justify-content: space-around;
+        flex-direction: row;
+        position: relative;
+        align-items: center;
+        height: 100px;
+        margin: 0 0 20px 0;
+        width: 100%;
+        background: rgba(101,101,101, .1);
+        top: 0;
+        left: 0;
+    }
+
+    ion-icon:hover {
+        box-sizing:content-box;
+        color: #e1e1e1;
+        transform: scale(1.1);
+    }
+
+    .nav ion-icon {
+        font-size: 34px;
+        padding: 30px 40px;
+    }
+
+    .nav a {
+        width: 33.3333%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (width < 600px) {
+    a, p, h3{
+        font-size: small;
+    }
+
+    .nav ion-icon {
+        font-size: 34px;
+        padding: 5px;
+    }
+}

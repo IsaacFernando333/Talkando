@@ -33,8 +33,7 @@ async function getUserInfo() {
         }
     }
 
-    let infos = [];
-    //Id publicação e id pessoa
+    // let infos = [];
 
     for (item of res) {
         
@@ -71,6 +70,26 @@ async function getUserInfo() {
         likcom.setAttribute('class', 'cxintera');
         come.setAttribute('class', 'comeT');
         divEmbed.setAttribute('class', 'embed');
+
+        
+        async function getAVNA(a) {
+            const idP = a;
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json',
+                },
+                body: JSON.stringify({idP})
+            }
+            
+            const req = await fetch('/info/profiles', options);
+            const res = req.json();
+            return res;
+        }
+        const dataUser = await getAVNA(item.idPessoa);
+        nome.textContent = dataUser.name;
+        nome.href = `/profile/${dataUser.id}`;
+        pct.src = `${dataUser.pic}`;
     
     
         titulo.innerHTML = urlify(item.titulo).replace(/(\r\n|\n|\r)/gm, "<br>"); 
@@ -113,51 +132,19 @@ async function getUserInfo() {
         infp.appendChild(nome);
         infp.appendChild(date);
         infp.appendChild(local);
-        infos.push([item._id, item.idPessoa]);
-    }
+        // infos.push([item._id, item.idPessoa]);
 
-    let contador = 0;
-    for (e of infos) {
-        async function getAVNA(a) {
-            const idP = a;
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type':'application/json',
-                },
-                body: JSON.stringify({idP})
-            }
-            
-            const req = await fetch('/info/profiles', options);
-            const res = req.json();
-            return res;
-        }
-        
-        const dataUser = await getAVNA(e[1]);
-        const publis = document.querySelectorAll('.publi');
-        publis[contador].childNodes[0].childNodes[1].childNodes[0].textContent = dataUser.name;
-        publis[contador].childNodes[0].childNodes[1].childNodes[0].href = `/profile/${dataUser.id}`;
-        publis[contador].childNodes[0].childNodes[0].src = `${dataUser.pic}`;
-        contador += 1;
-    }
-
-    let index = 0;
-    for (j of infos) {
-        const token = sessionStorage.getItem('token');
         const options = {
             method: 'POST',
             headers: {
                 'Content-Type':'application/json',
                 'authorization':`Bearer ${token}`
             },
-            body: JSON.stringify({idP: j[0]})
+            body: JSON.stringify({idP: item._id})
         }
         
         const req = await fetch('/get/comment', options);
         const res = await req.json();
-
-        const publis = document.querySelectorAll('.publi');
-        let come = publis[index].childNodes[5];
 
         for (o of res.comentarios) {
             let div = document.createElement('div');
@@ -165,6 +152,54 @@ async function getUserInfo() {
             div.innerHTML = `<a class="nomeComentador" href="/Profile/${o.idPessoa}">${o.name}</a> ~ ${o.comentario}`;
             come.appendChild(div);
         }
-        index += 1;
+
+        // async function getAVNA(a) {
+        //     const idP = a;
+        //     const options = {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type':'application/json',
+        //         },
+        //         body: JSON.stringify({idP})
+        //     }
+            
+        //     const req = await fetch('/info/profiles', options);
+        //     const res = req.json();
+        //     return res;
+        // }
+        
+        // const dataUser = await getAVNA(item.idPessoa);
+
+        // nome.textContent = dataUser.name;
+        // nome.href = `/profile/${dataUser.id}`;
+        // pct.src = `${dataUser.pic}`;
     }
+
+    //se eu quiser colocar os comentários em uma versão expandida
+
+    // let index = 0;
+    // for (j of infos) {
+    //     const token = sessionStorage.getItem('token');
+    //     const options = {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type':'application/json',
+    //             'authorization':`Bearer ${token}`
+    //         },
+    //         body: JSON.stringify({idP: j[0]})
+    //     }
+        
+    //     const req = await fetch('/get/comment', options);
+    //     const res = await req.json();
+
+    //     let come = publis[index].childNodes[5];
+
+    //     for (o of res.comentarios) {
+    //         let div = document.createElement('div');
+    //         div.setAttribute('class', 'osComentarios');
+    //         div.innerHTML = `<a class="nomeComentador" href="/Profile/${o.idPessoa}">${o.name}</a> ~ ${o.comentario}`;
+    //         come.appendChild(div);
+    //     }
+    //     index += 1;
+    // }
 }

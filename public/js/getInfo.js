@@ -83,20 +83,22 @@ async function getData(a, b, c, t) {
             return novos;
         }
     }
+
+    let infos = [];
     
     for (item of res) {
-        const token = t;
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type':'application/json',
-                'authorization':`Bearer ${token}`
-            },
-            body: JSON.stringify({idP: item._id})
-        }
+        // const token = t;
+        // const options = {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type':'application/json',
+        //         'authorization':`Bearer ${token}`
+        //     },
+        //     body: JSON.stringify({idP: item._id})
+        // }
         
-        const req = await fetch('/get/comment', options);
-        const res = await req.json();
+        // const req = await fetch('/get/comment', options);
+        // const res = await req.json();
 
         //Criando elementos
 
@@ -190,16 +192,45 @@ async function getData(a, b, c, t) {
         ifo5.appendChild(likcom);
         ifo5.appendChild(come);
 
+        // for (o of res.comentarios) {
+        //     let div = document.createElement('div');
+        //     div.setAttribute('class', 'osComentarios');
+        //     div.innerHTML = `<a class="nomeComentador" href="/Profile/${o.idPessoa}">${o.name}</a> ~ ${o.comentario}`;
+        //     come.appendChild(div);
+        // }
+
+        ifo4.appendChild(ifo5);
+        infp.appendChild(nome);
+        infp.appendChild(date);
+        infp.appendChild(local);
+
+        infos.push([item._id, item.idPessoa]);
+    }
+    const publis = document.querySelectorAll('.publi');
+
+    let index = 0;
+    for (j of infos) {
+        const token = sessionStorage.getItem('token');
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json',
+                'authorization':`Bearer ${token}`
+            },
+            body: JSON.stringify({idP: j[0]})
+        }
+        
+        const req = await fetch('/get/comment', options);
+        const res = await req.json();
+
+        let come = publis[index].childNodes[5];
+
         for (o of res.comentarios) {
             let div = document.createElement('div');
             div.setAttribute('class', 'osComentarios');
             div.innerHTML = `<a class="nomeComentador" href="/Profile/${o.idPessoa}">${o.name}</a> ~ ${o.comentario}`;
             come.appendChild(div);
         }
-
-        ifo4.appendChild(ifo5);
-        infp.appendChild(nome);
-        infp.appendChild(date);
-        infp.appendChild(local);
+        index += 1;
     }
 }

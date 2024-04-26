@@ -1,18 +1,8 @@
 const preview = document.getElementById('preview');
 
-if (preview.src === 'http://localhost:4000/html/mandar.html') {
+if (preview.src === 'http://localhost:4000/HTML/mandar.html') {
     preview.style.display = 'none';
 }
-
-// function verificaSeEstaLogado() {
-//     if (sessionStorage.getItem('id') === null) {
-//         location.reload();
-//         window.location.href = "index.html";
-//     } else {
-//         return;
-//     }
-// }
-
 
 const button = document.getElementById('submit');
 const foto = document.getElementById('aFoto');

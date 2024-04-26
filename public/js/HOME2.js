@@ -27,7 +27,7 @@ document.addEventListener('click', async (e) => {
         if (e.target === lx) {
             const checa = confirm('tem certeza que deseja excluir essa publicação?');
             if (checa === true) {
-                const idp = lx.closest('.publi').getAttribute('class').split(' ')[1];;
+                const idp = lx.closest('.publi').getAttribute('class').split(' ')[1];
                 const token = sessionStorage.getItem('token');
                 const data = { idp };
                 const options = {

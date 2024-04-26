@@ -37,7 +37,7 @@ app.post('/user/publication', checkToken, async(req, res) => {
 app.delete('/user/delete', checkToken, async(req, res) => {
   const id = returnId(req);
   const idp = req.body.idp;
-  const public = await Publication.findById(idp);
+  const public = await Publication.findById(idp, "-pic -local -qtd_cm -comentarios -date_now -like -humor -embed -titulo -date");
   if (public.idPessoa === id) {
     try {
       const publi = await Publication.findByIdAndDelete(idp);
@@ -62,7 +62,7 @@ app.get('/user/publis', checkToken, async(req, res) => {
 
 app.post('/info/profiles', async(req, res) => {
   const id = req.body.idP;
-  const users = await User.findById(id);
+  const users = await User.findById(id, "-password -capa -email -sexo -local -friends -apresentacao -nascimento");
   res.json({name: users.name, pic: users.avatar, id: users._id});
 })
 
@@ -80,7 +80,7 @@ app.get('/user/global', checkToken, async(req, res) => {
 
 app.post('/give/like', async(req, res) => {
   const idPubli = req.body.idp;
-  const p = await Publication.findById(idPubli);
+  const p = await Publication.findById(idPubli, "-pic -local -qtd_cm -comentarios -date_now -humor -embed -titulo -date");
   const numeroLikes = parseInt(p.like) + 1;
   await Publication.updateOne(
     { _id: idPubli}, 
@@ -113,7 +113,7 @@ app.post('/get/comment', async(req, res) => {
   const idP = req.body.idP;
   const coments = await Publication.findById(idP);
   for (u of coments.comentarios) {
-    const user = await User.findById(u.idPessoa);
+    const user = await User.findById(u.idPessoa, "-password -avatar -capa -email -sexo -local -friends -apresentacao -nascimento");
     u["name"] = user.name;
   }
   res.json({comentarios: coments.comentarios});
@@ -125,7 +125,7 @@ app.get('/search', (req, res) => {
 
 app.post('/search/profiles', async(req, res) => {
   const name = req.body.name;
-  const users = await User.find({name: name});
+  const users = await User.find({name: name}, "-capa -password -nascimento -sexo -email -local -friends");
   let lista = new Array();
   for (p of users) {
     lista.push({name: p.name, pic: p.avatar, apresentacao: p.apresentacao, id: p._id});
@@ -138,7 +138,7 @@ app.post('/follow/request', checkToken , async(req, res) => {
   const idfollow = req.body.id;
 
   const id = returnId(req);
-  const user = await User.findById(id);
+  const user = await User.findById(id,  "-avatar -name -apresentacao -capa -password -nascimento -sexo -email -local");
   const lista = user.friends;
   if (id === idfollow) {
     res.json({status: 'Não pode seguir você mesmo'});
@@ -171,8 +171,7 @@ app.post('/following', checkToken, async(req, res) => {
     return;
   }
 
-  const user = await User.findById(id);
-
+  const user = await User.findById(id, "-avatar -name -apresentacao -capa -password -nascimento -sexo -email -local");
   obj = {msg: 'Seguir'};
 
   for (e of user.friends) {
@@ -187,7 +186,7 @@ app.post('/following', checkToken, async(req, res) => {
 app.get('/following/list', checkToken, async(req, res) => {
 
   const id = returnId(req);
-  const user = await User.findById(id);
+  const user = await User.findById(id, "-password -capa -email -sexo -local -apresentacao -nascimento");
   const allObj = [];
   for (f of user.friends) {
     const us = await User.findById(f.idfollow);
