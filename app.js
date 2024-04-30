@@ -15,7 +15,6 @@ const dbLink = process.env.LINK;
 
 const User = require('./models/User'); 
 const Publication = require('./models/Publis');
-const { restart } = require('nodemon');
 
 //PUBLICAÇÕES
 
